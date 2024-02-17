@@ -1,7 +1,6 @@
 const express = require("express");
 const _ = require("lodash");
 const Joi = require("joi");
-Joi.objectId = require("joi-objectid")(Joi);
 
 const auth = require("../middleware/auth.js");
 const adminAuth = require("../middleware/admin.js");

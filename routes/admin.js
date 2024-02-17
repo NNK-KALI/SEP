@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
-Joi.objectId = require("joi-objectid")(Joi);
+
 
 const router = express.Router();
 
