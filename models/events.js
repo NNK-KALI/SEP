@@ -38,5 +38,6 @@ function validateEvent(event) {
 
 module.exports.Event = Event;
 module.exports.validateEvent = validateEvent;
+module.exports.eventSchemaMongoose = eventSchemaMongoose;
 
 
