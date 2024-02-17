@@ -11,6 +11,9 @@ const adminRouter = require('./routes/admin.js');
 const eventsRouter = require("./routes/events.js");
 const authRouter = require("./routes/auth.js");
 
+const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
+
 const app = express();
 const PORT = 7000;
 
