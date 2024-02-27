@@ -89,4 +89,12 @@ const userSchemaJoi = Joi.object({
   degreeLevel: Joi.string().min(1).required(),
   personalEmail: Joi.string().min(3).email().required(),
   universityEmail: Joi.string().min(3).email()
-})
+});
+
+
+function validateUser(user) {
+  return userSchemaJoi.validate(user);
+}
+
+module.exports.User = User;
+module.exports.validateUser = validateUser;
