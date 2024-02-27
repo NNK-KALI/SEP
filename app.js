@@ -36,6 +36,10 @@ mongoose.connect("mongodb://localhost:27017/test")
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
 
+app.get("/hello", (req, res) => {
+  res.json("Hello world");
+});
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
