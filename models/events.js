@@ -27,6 +27,11 @@ const eventSchemaMongoose = new mongoose.Schema({
     type: String,
     minlength: 1,
     required: true
+  },
+  imageUri: {
+    type: String,
+    minlength: 1,
+    required: true
   }
 });
 
@@ -37,8 +42,9 @@ const eventSchemaJoi = Joi.object({
   teamSize: Joi.number().positive().required(),
   regStartDate: Joi.date().greater('now').iso().required() ,
   regEndDate: Joi.date().greater(Joi.ref('regStartDate')).iso().required(),
-  eventDate: Joi.date().greater(Joi.ref('regStartDate')).iso().required(),
-  venue: Joi.string().min(1).required()
+  eventDate: Joi.date().greater(Joi.ref('regEndDate')).iso().required(),
+  venue: Joi.string().min(1).required(),
+  imageUri: Joi.string().uri({allowRelative: true}).required()
 });
 
 
