@@ -24,7 +24,10 @@ router.post("/", auth, adminAuth, async (req, res) => {
     title: validatedEvent.value.title,
     teamSize: validatedEvent.value.teamSize,
     regStartDate: validatedEvent.value.regStartDate,
-    regEndDate:  validatedEvent.value.regEndDate
+    regEndDate:  validatedEvent.value.regEndDate,
+    eventDate: validatedEvent.value.eventDate,
+    venue: validatedEvent.value.venue,
+    imageUri: validatedEvent.value.imageUri
   });
 
   event = await event.save();

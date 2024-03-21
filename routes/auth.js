@@ -16,7 +16,8 @@ router.post("/adminLogin", async (req, res) => {
   if(!validPassword) return res.status(400).send("Invalid password.");
   
   const token = admin.generateAdminAuthToken();
-  res.send(token);
+  const isAdmin = admin.isAdmin;
+  res.json({"athmeetApiKey": token, "isAdmin": isAdmin});
 });
 
 function validateAdmin(admin) {

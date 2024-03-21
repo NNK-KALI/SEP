@@ -1,5 +1,6 @@
 // const createError = require('http-errors');
 const express = require('express');
+const cors = require("cors");
 const path = require('node:path');
 // const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
@@ -23,6 +24,12 @@ if (!jwtToken) {
   console.error("specify jwt token");
   process.exit(1);
 }
+
+// configure cors
+app.use(cors({
+  origin: '*', // Allow requests from any origin
+  credentials: true, // You may need this if your frontend sends cookies
+}));
 
 mongoose.connect("mongodb://localhost:27017/test")
   .then(() => console.log("connected to mongodb."))
