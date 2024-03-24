@@ -12,6 +12,7 @@ const adminRouter = require('./routes/admin.js');
 const eventsRouter = require("./routes/events.js");
 const authRouter = require("./routes/auth.js");
 const participantRouter = require("./routes/participants.js");
+const userRouter = require("./routes/users.js");
 
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
@@ -57,6 +58,7 @@ app.use("/api/v1/events", eventsRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/participants", participantRouter);
+app.use("/api/v1/users", userRouter);
 // app.use('/users', usersRouter);
 // app.use("/events", eventsRouter);
 
