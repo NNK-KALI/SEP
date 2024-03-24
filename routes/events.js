@@ -6,6 +6,8 @@ const auth = require("../middleware/auth.js");
 const adminAuth = require("../middleware/admin.js");
 
 const { Event, validateEvent } = require("../models/events.js");
+const { Participant } = require("../models/participant.js");
+
 
 const router = express.Router();
 
@@ -30,7 +32,26 @@ router.post("/", auth, adminAuth, async (req, res) => {
     imageUri: validatedEvent.value.imageUri
   });
 
+    
+  let participantDoc = undefined;
+  let participantDocId = undefined; 
+  
+  try {
+    participantDoc = new Participant();
+    participantDoc.eventId = event._id;
+    participantDoc.eventTitle = event.title;
+    participantDoc = await participantDoc.save();
+    participantDocId = participantDoc._id;
+  } catch(error) {
+    console.error(error);
+    return res.status(500).send("Internal Server Error.");
+  }
+  
+  if (!participantDocId) return res.status(500).send("Internal Server Error.");
+  event.participantDocId = participantDocId;
+  
   event = await event.save();
+
   res.json(event);
 });
 
@@ -46,6 +67,8 @@ router.patch("/", auth, adminAuth, async (req, res) => {
   event.teamSize = req.body.teamSize;
   event.regStartDate = req.body.regStartDate;
   event.regEndDate = req.body.regEndDate;
+
+  // [implementation] Also change the title of the participants document.
   
   event = await event.save();
   res.json(event);
@@ -58,6 +81,8 @@ router.delete("/", auth, adminAuth, async (req, res) => {
 
   const event = await Event.findByIdAndDelete(req.body._id);
   if(!event) return res.status(404).send("Event not found.");
+
+  // [implementation] Also delete participantDoc for this event.
 
   res.json({"success": true});
 });

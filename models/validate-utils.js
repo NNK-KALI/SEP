@@ -8,4 +8,4 @@ function validateId(id) {
   return schema.validate({id: id});
 }
 
-module.exports = validateId;
+module.exports.validateId = validateId;
