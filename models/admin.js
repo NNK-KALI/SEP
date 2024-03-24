@@ -4,11 +4,21 @@ const config = require("config");
 const jwt = require("jsonwebtoken");
 
 const adminSchemaMongoose = new mongoose.Schema({
-  name: {
+  firstname: {
     type: String,
     minlength: 1,
     maxlength: 255,
     required: true,
+  },
+  middlename: {
+    type: String,
+    maxlength: 255,
+    required: false,
+  },
+  lastname: {
+    type: String,
+    maxlength: 255,
+    required: false,
   },
   email: {
     type: String,
@@ -25,14 +35,14 @@ const adminSchemaMongoose = new mongoose.Schema({
   },
   isAdmin: {
     type: Boolean,
-    default: true
+    default:  false
   }
 });
 
 adminSchemaMongoose.methods.generateAdminAuthToken = function() {
   const token = jwt.sign({
     _id: this._id, 
-    name: this.name, 
+    name: `${this.firstname} ${this.middlename} ${this.lastname}`, 
     email: this.email,
     isAdmin: this.isAdmin
   }, config.get("jwtPrivateKey"));
@@ -42,7 +52,9 @@ adminSchemaMongoose.methods.generateAdminAuthToken = function() {
 const Admin = mongoose.model("Admin", adminSchemaMongoose);
 
 const adminSchemaJoi = Joi.object({
-  name: Joi.string().min(1).max(255).alphanum().required(),
+  firstname: Joi.string().min(1).max(255).alphanum().required(),
+  middlename: Joi.string().min(1).max(255).alphanum().allow(""),
+  lastname: Joi.string().min(1).max(255).alphanum().allow(""),
   email: Joi.string().min(1).max(255).email().required(),
   password: Joi.string().min(1).max(255).required()
 });
