@@ -30,12 +30,12 @@ router.post("/", auth, adminAuth, async (req, res) => {
   let admin = await Admin.findOne({ email: req.body.email });
   if(admin) return res.status(400).send("Admin alredy exixts.");
   
-  admin = new Admin(_.pick(req.body, ["name", "email", "isAdmin" ]));
+  admin = new Admin(_.pick(req.body, ["firstname", "middlename", "lastname", "email", "isAdmin" ]));
   const salt = await bcrypt.genSalt();
   const hash =  await bcrypt.hash( _.pick(req.body, ["password"]).password , salt);
   admin.password = hash;
   admin = await admin.save();
-  admin = _.pick(admin, ["name", "email", "isAdmin", "_id"]);
+  admin = _.pick(admin, ["firstname", "middlename", "lastname", "email", "isAdmin", "_id"]);
   res.json(admin);
 });
 
