@@ -56,7 +56,8 @@ const adminSchemaJoi = Joi.object({
   middlename: Joi.string().min(1).max(255).alphanum().allow(""),
   lastname: Joi.string().min(1).max(255).alphanum().allow(""),
   email: Joi.string().min(1).max(255).email().required(),
-  password: Joi.string().min(1).max(255).required()
+  password: Joi.string().min(1).max(255).required(),
+  isAdmin: Joi.boolean().default(false)
 });
 
 function validateAdmin(admin) {
