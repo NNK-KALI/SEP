@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const joiObjectid = require("joi-objectid");
 
 const eventSchemaMongoose = new mongoose.Schema({
   title: {
@@ -32,6 +33,9 @@ const eventSchemaMongoose = new mongoose.Schema({
     type: String,
     minlength: 1,
     required: true
+  },
+  participantDocId: {
+    type: mongoose.Types.ObjectId,
   }
 });
 
