@@ -42,7 +42,9 @@ router.post("/", auth, adminAuth, async (req, res) => {
 // edit a admin
 router.put("/", auth, adminAuth, async (req, res) => {
   const schema = Joi.object({
-    name: Joi.string().min(1).max(255).required(),
+    firstname: Joi.string().min(1).max(255).required(),
+    middlename: Joi.string().min(1).max(255),
+    lastname: Joi.string().min(1).max(255),
     isAdmin: Joi.boolean().required(),
     _id: Joi.objectId().required()
   });
@@ -51,12 +53,14 @@ router.put("/", auth, adminAuth, async (req, res) => {
   if(error) return res.status(400).send(error.details[0].message);
 
   let admin = await Admin.findById(req.body._id);
-  if(!admin) return res.status(404).send("Admin not found.");
+  if(!admin) return res.status(404).send("User not found.");
 
-  admin.name = req.body.name;
+  admin.firstname = req.body.firstname;
+  admin.middlename = req.body.middlename;
+  admin.lastname = req.body.lastname;
   admin.isAdmin = req.body.isAdmin;
   admin = await admin.save();
-  admin = _.pick(admin, ["name", "email", "isAdmin"]);
+  admin = _.pick(admin, ["firstname", "middlename", "lastname", "email", "isAdmin"]);
   res.json(admin);
 });
 
