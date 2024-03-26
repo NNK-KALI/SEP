@@ -9,11 +9,23 @@ const router = express.Router();
 const {Admin, validateAdmin} = require("../models/admin.js");
 const auth = require("../middleware/auth.js");
 const adminAuth = require("../middleware/admin.js");
+const {validateId} = require("../models/validate-utils.js");
 
-// get details of admin
+// get current user profile
 router.get("/me", auth, adminAuth, async (req, res) => {
   const admin = await Admin.findById(req.user._id).select({ password: 0 });
   res.json(admin);
+});
+
+// Get user details
+router.get("/:id", auth, adminAuth, async (req, res) => {
+  const {error} = validateId(req.params.id);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const admin = await Admin.findById(req.params.id);
+  if (!admin) return res.status(404).send("User not found");
+
+  res.send(_.pick(admin, ["firstname", "middlename", "lastname", "email", "isAdmin"]));
 });
 
 // get all the admins
