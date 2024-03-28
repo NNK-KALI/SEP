@@ -31,6 +31,7 @@ router.get("/:participantDocId", async (req, res) => {
   for (let userDocId of regUsersDocId) {
     const user = await User.findById(userDocId);
     regUsers.push({
+      id: user._id,
       rollno: user.rollno,
       firstname: user.firstname,
       middlename: user.middlename,
