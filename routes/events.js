@@ -5,7 +5,7 @@ const Joi = require("joi");
 const auth = require("../middleware/auth.js");
 const adminAuth = require("../middleware/admin.js");
 
-const { Event, validateEvent } = require("../models/events.js");
+const { Event, validateEvent, validatePatchEvent } = require("../models/events.js");
 const { Participant } = require("../models/participant.js");
 
 
@@ -24,6 +24,7 @@ router.post("/", auth, adminAuth, async (req, res) => {
 
   let event = new Event({
     title: validatedEvent.value.title,
+    description: validatedEvent.value.description,
     teamSize: validatedEvent.value.teamSize,
     regStartDate: validatedEvent.value.regStartDate,
     regEndDate:  validatedEvent.value.regEndDate,
@@ -57,16 +58,16 @@ router.post("/", auth, adminAuth, async (req, res) => {
 
 // Edit an Event
 router.patch("/", auth, adminAuth, async (req, res) => {
-  const {error} = validateEvent(_.pick(req.body, ["title", "teamSize", "regEndDate", "regStartDate"]));
+  const data =  _.pick(req.body, ["title", "description", "teamSize", "regEndDate", "regStartDate", "eventDate", "venue", "imageUri"]);
+  const {error} = validatePatchEvent(data);
   if (error) return res.status(400).send(error.details[0].message);
   
   let event = await Event.findById(req.body._id);
   if (!event) return res.status(400).send("Event not found.");
 
-  event.title = req.body.title;
-  event.teamSize = req.body.teamSize;
-  event.regStartDate = req.body.regStartDate;
-  event.regEndDate = req.body.regEndDate;
+  for (let item in data) {
+    event[item] = data[item];
+  }
 
   // [implementation] Also change the title of the participants document.
   
