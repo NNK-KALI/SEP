@@ -1,9 +1,11 @@
 const express = require("express");
-const Joi = require("joi");
 const _ = require("lodash");
 
+const auth = require("../middleware/auth.js");
+const adminAuth = require("../middleware/admin.js");
+
 const {Announcement, validateAnnouncement} = require("../models/announcements.js");
-const validateId = require("../models/validate-utils.js");
+const { validateId } = require("../models/validate-utils.js");
 
 const router = express.Router();
 
@@ -15,11 +17,13 @@ router.get("/", async (req, res) => {
 
 // Get a single announcement
 router.get("/:id", async (req, res) => {
-  const {error} = validateId(_.pick(req.body, ["id"]));
+  const {error} = validateId(req.params.id);
   if (error) return res.status(400).send("Invalid Id");
 
-  const announcement = Announcement.findById(req.body.id);
-  return res.json(announcement);
+  const announcement = await Announcement.findById(req.params.id);
+  if (!announcement) return res.status(404).send("announcement not found");
+
+  return res.send(announcement);
 })
 
 // Create a new announcement
