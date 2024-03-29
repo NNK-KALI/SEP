@@ -8,6 +8,9 @@ const eventSchemaMongoose = new mongoose.Schema({
     minlength: 1,
     required: true
   },
+  description: {
+    type: String,
+  },
   teamSize: {
     type: Number,
     required: true,
@@ -43,6 +46,7 @@ const Event =  mongoose.model( "event", eventSchemaMongoose);
 
 const eventSchemaJoi = Joi.object({
   title: Joi.string().min(1).required(),
+  description: Joi.string(),
   teamSize: Joi.number().positive().required(),
   regStartDate: Joi.date().greater('now').iso().required() ,
   regEndDate: Joi.date().greater(Joi.ref('regStartDate')).iso().required(),
@@ -51,14 +55,28 @@ const eventSchemaJoi = Joi.object({
   imageUri: Joi.string().uri({allowRelative: true}).required()
 });
 
+const patchEventSchemaJoi = Joi.object({
+  title: Joi.string().min(1),
+  description: Joi.string(),
+  teamSize: Joi.number().positive(),
+  regStartDate: Joi.date().greater('now').iso(),
+  regEndDate: Joi.date().greater(Joi.ref('regStartDate')),
+  eventDate: Joi.date().greater(Joi.ref('regEndDate')).iso(),
+  venue: Joi.string().min(1),
+  imageUri: Joi.string().uri({allowRelative: true})
+});
 
 function validateEvent(event) {
   return eventSchemaJoi.validate(event);
 }
 
+function validatePatchEvent(event) {
+  return patchEventSchemaJoi.validate(event);
+}
 
 module.exports.Event = Event;
 module.exports.validateEvent = validateEvent;
+module.exports.validatePatchEvent = validatePatchEvent;
 module.exports.eventSchemaMongoose = eventSchemaMongoose;
 
 
