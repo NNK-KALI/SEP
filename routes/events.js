@@ -90,9 +90,13 @@ router.delete("/", auth, adminAuth, async (req, res) => {
   const event = await Event.findByIdAndDelete(req.body._id);
   if(!event) return res.status(404).send("Event not found.");
 
-  // [implementation] Also delete participantDoc for this event.
-  //
-
+  try {
+    const response = await Participant.findOneAndDelete({ eventId: req.body._id });
+    if (!response) throw new Error("participant doc not found for the event.");
+  } catch (error) {
+    console.error("Failed to delete participant doc id for the corresponding event.");
+    console.log(error);
+  }
   res.json({"success": true});
 });
 
