@@ -64,7 +64,7 @@ router.delete("/", auth, adminAuth, async (req, res) => {
   const {error} = validateId(req.body.id);
   if (error) return res.status(400).send("Invalid Id");
 
-  const announcement = Announcement.findByIdAndDelete(req.body.id);
+  const announcement = await Announcement.findByIdAndDelete(req.body.id);
   if (!announcement) return res.status(404).send("announcement not found");
 
   return res.send({ "success": true });
