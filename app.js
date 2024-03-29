@@ -1,11 +1,13 @@
 // const createError = require('http-errors');
 const express = require('express');
+require("express-async-errors");
 const cors = require("cors");
 const path = require('node:path');
 // const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const config = require("config");
+const errorHandler = require("./middleware/error.js");
 
 // const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin.js');
@@ -38,7 +40,7 @@ mongoose.connect("mongodb://localhost:27017/test")
   .then(() => console.log("connected to mongodb."))
   .catch((reason) => {
     console.log(`failed to connect to mongodb.\n${reason}`);
-    process.exit(1);
+    // process.exit(1);
   });
 
 
@@ -56,6 +58,7 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use("/api/v1/events", eventsRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/auth", authRouter);
@@ -65,6 +68,7 @@ app.use("/api/v1/announcements", announcementRouter);
 // app.use('/users', usersRouter);
 // app.use("/events", eventsRouter);
 
+app.use(errorHandler);
 
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
