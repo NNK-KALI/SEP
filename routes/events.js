@@ -69,7 +69,14 @@ router.patch("/", auth, adminAuth, async (req, res) => {
     event[item] = data[item];
   }
 
-  // [implementation] Also change the title of the participants document.
+  if (data.title) {
+    try {
+      await Participant.findOneAndUpdate({ eventId: req.body._id }, {eventTitle: data.title});
+    } catch (error) {
+      console.log("couldn't update the title in the participants doc Id");
+      console.log(error);
+    }
+  }
   
   event = await event.save();
   res.json(event);
@@ -84,6 +91,7 @@ router.delete("/", auth, adminAuth, async (req, res) => {
   if(!event) return res.status(404).send("Event not found.");
 
   // [implementation] Also delete participantDoc for this event.
+  //
 
   res.json({"success": true});
 });
