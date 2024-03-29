@@ -71,9 +71,9 @@ router.patch("/", auth, adminAuth, async (req, res) => {
 
   if (data.title) {
     try {
-      await Participant.findOneAndUpdate({ eventId: req.body._id }, {eventTitle: data.title});
+      const response = await Participant.findOneAndUpdate({ eventId: req.body._id }, {eventTitle: data.title});
+      if (!response) throw new Error("couldn't update the title in the participants doc Id");
     } catch (error) {
-      console.log("couldn't update the title in the participants doc Id");
       console.log(error);
     }
   }
