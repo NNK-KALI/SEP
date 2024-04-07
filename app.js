@@ -36,7 +36,7 @@ app.use(cors({
   credentials: true, // You may need this if your frontend sends cookies
 }));
 
-mongoose.connect("mongodb://localhost:27017/test")
+mongoose.connect(config.get("MONGODB_URI") + "athletemeet")
   .then(() => console.log("connected to mongodb."))
   .catch((reason) => {
     console.log(`failed to connect to mongodb.\n${reason}`);

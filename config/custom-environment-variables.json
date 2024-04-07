@@ -1,6 +1,6 @@
 {
   "jwtPrivateKey": "SEP_jwtPrivateKey",
   "GMAIL_USER": "SEP_GMAIL_USER",
-  "GMAIL_APP_PASS": "SEP_GMAIL_APP_PASS"
-
+  "GMAIL_APP_PASS": "SEP_GMAIL_APP_PASS",
+  "MONGODB_URI": "SEP_MONGODB_URI"
 }
