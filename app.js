@@ -22,7 +22,11 @@ const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 
 const app = express();
-const PORT = 7000;
+const PORT = parseInt(config.get("PORT"));
+if (!PORT) {
+  console.log("PORT not specified");
+  process.exit(1);
+}
 
 const jwtToken = config.get("jwtPrivateKey");
 if (!jwtToken) {
