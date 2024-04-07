@@ -1,3 +1,6 @@
 {
-  "jwtPrivateKey": "SEP_jwtPrivateKey"
+  "jwtPrivateKey": "SEP_jwtPrivateKey",
+  "GMAIL_USER": "SEP_GMAIL_USER",
+  "GMAIL_APP_PASS": "SEP_GMAIL_APP_PASS"
+
 }

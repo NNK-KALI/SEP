@@ -1,3 +1,6 @@
 {
-  "jwtPrivateKey": "" 
+  "jwtPrivateKey": "" ,
+  "GMAIL_USER": "",
+  "GMAIL_APP_PASS": ""
+
 }

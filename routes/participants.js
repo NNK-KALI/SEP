@@ -11,7 +11,7 @@ const { Event } = require("../models/events.js");
 const { Participant } = require("../models/participant.js");
 const { User } = require("../models/users.js");
 const { validateId } = require("../models/validate-utils.js");
-
+const sendEmail = require("../helper/mailer.js");
 
 // Get participants 
 router.get("/", async (req, res) => {
@@ -68,8 +68,6 @@ router.post("/", auth, adminAuth, async (req, res) => {
 
 // add a new participant 
 router.patch("/adduser", auth, async (req, res) => {
-  
-
   // check if the document id is in mongodb id format or not
   const validatedDocId = Joi.object({ participantDocId: Joi.objectId() }).validate(_.pick(req.body, "participantDocId"));
   if (validatedDocId.error) return res.status(400).send(validatedDocId.error.details[0].message);
@@ -77,6 +75,15 @@ router.patch("/adduser", auth, async (req, res) => {
   // ceheck if the document is present in the collection or not.
   let participantDoc = await Participant.findById(req.body.participantDocId);
   if (!participantDoc) return res.status(404).send("No participant document found with that ID."); 
+
+  const event = await Event.findOne({participantDocId: req.body.participantDocId});
+  if (!event) return res.status(404).send("Event not found");
+
+  const currentDate  = new Date().toISOString();
+  console.log(`curent date: ${currentDate}; event reg date: ${new Date(event.regStartDate).toISOString()}`);
+
+  if (currentDate < new Date(event.regStartDate).toISOString()) return res.status(400).send("Registrations didn't start yet.");
+  if (currentDate > new Date(event.regEndDate).toISOString()) return res.status(400).send("registrations closed.");
 
   // Fetch the user id from the rollno
   const user = await User.findOne({rollno: req.body.rollno});
@@ -90,6 +97,20 @@ router.patch("/adduser", auth, async (req, res) => {
   // Append userDocId to the userIds array (add an user to an event)
   participantDoc.userIds.push(userDocId);
   participantDoc = await participantDoc.save();
+
+  // send email 
+  try {
+    const toEmail = user.universityEmail;
+    const subject = "Acknowledgment for Athletic event Registration";
+    // const message = `Hello, ${user.firstname} ${user.middlename} ${user.lastname}\n\n\nThank you for participating in ${event.title} on ${event.eventDate}.\n\n\n\nBest wishes,\nAthletic Meet Team`;
+    const html = `<p>Hello, <span id="firstname">${user.firstname}</span> <span id="middlename">${user.middlename}</span> <span id="lastname">${user.lastname}</span></p>
+    <p>Thank you for participating in <span id="eventTitle">${event.title}</span> on <span id="eventDate">${event.eventDate}</span>.</p>
+    <p>Best wishes,<br>Athletic Meet Team</p>`
+      
+    sendEmail(toEmail, subject, html);
+  } catch (error) {
+    console.error(error);
+  }
   res.json(participantDoc);
 });
 

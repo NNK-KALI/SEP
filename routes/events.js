@@ -4,6 +4,7 @@ const Joi = require("joi");
 
 const auth = require("../middleware/auth.js");
 const adminAuth = require("../middleware/admin.js");
+const {validateId} = require("../models/validate-utils.js");
 
 const { Event, validateEvent, validatePatchEvent } = require("../models/events.js");
 const { Participant } = require("../models/participant.js");
@@ -15,6 +16,15 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   const events = await Event.find();
   res.json(events);
+});
+
+// Get an event
+router.get("/:id", async (req, res) => {
+  const {error} = validateId(req.params.id);
+  if (error) return res.status(400).send("Invalid Id");
+
+  const event = await Event.findById(req.params.id);
+  return res.json(event);
 });
 
 // Create a new event
