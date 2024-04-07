@@ -5,6 +5,7 @@
 # my rules
 run.sh
 public
+hashpassword.js
 
 # === Rule for dotfiles ===
 # Ignore all dotfiles.
