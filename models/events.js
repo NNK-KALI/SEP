@@ -48,9 +48,9 @@ const eventSchemaJoi = Joi.object({
   title: Joi.string().min(1).required(),
   description: Joi.string(),
   teamSize: Joi.number().positive().required(),
-  regStartDate: Joi.date().greater('now').iso().required() ,
-  regEndDate: Joi.date().greater(Joi.ref('regStartDate')).iso().required(),
-  eventDate: Joi.date().greater(Joi.ref('regEndDate')).iso().required(),
+  regStartDate: Joi.date().greater('now').timestamp().required(),
+  regEndDate: Joi.date().greater(Joi.ref('regStartDate')).timestamp().required(),
+  eventDate: Joi.date().greater(Joi.ref('regEndDate')).timestamp().required(),
   venue: Joi.string().min(1).required(),
   imageUri: Joi.string().uri({allowRelative: true}).required()
 });
@@ -59,9 +59,9 @@ const patchEventSchemaJoi = Joi.object({
   title: Joi.string().min(1),
   description: Joi.string(),
   teamSize: Joi.number().positive(),
-  regStartDate: Joi.date().greater('now').iso(),
-  regEndDate: Joi.date().greater(Joi.ref('regStartDate')),
-  eventDate: Joi.date().greater(Joi.ref('regEndDate')).iso(),
+  regStartDate: Joi.date().greater('now').timestamp(),
+  regEndDate: Joi.date().greater(Joi.ref('regStartDate')).timestamp(),
+  eventDate: Joi.date().greater(Joi.ref('regEndDate')).timestamp(),
   venue: Joi.string().min(1),
   imageUri: Joi.string().uri({allowRelative: true})
 });
