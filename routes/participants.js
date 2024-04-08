@@ -134,6 +134,22 @@ router.delete("/removeuser", async (req, res) => {
   
   participantDoc.userIds.pull(req.body.userDocId);
   participantDoc = await participantDoc.save();
+
+  try {
+    const user = await User.findById(req.body.userDocId);
+    const event = await Event.findById(participantDoc.eventId);
+    if (user) {
+      const toEmail = user.universityEmail;
+      const subject = "Removed from Athletic event";
+      const html = `<p>Hello, <span id="firstname">${user.firstname}</span> <span id="middlename">${user.middlename}</span> <span id="lastname">${user.lastname}</span></p>
+      <p>You are removed from the event <span id="eventTitle">${event.title}</span> on <span id="eventDate">${event.eventDate}</span>.</p>
+      <p>From, Athletic Meet Team</p>`
+        
+      sendEmail(toEmail, subject, html);
+    }
+  } catch (error) {
+    console.error(error);
+  }
   res.json(participantDoc);
 
 });
